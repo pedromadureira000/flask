@@ -1,10 +1,44 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, abort
+import db
 
-app = Flask(__name__, template_folder="./static")
+app = Flask(__name__)
 
 @app.route('/')
 def root():
-    return f'oi'
+    html = ['<ul>']
+    for username, user in db.users.items():
+        html.append(
+            f"<li><a href = ' /user/{username}'>{user['name']}</a></li>"
+        )
+    html.append('</ul>')
+    return '\n'.join(html)
+
+def profile(username):
+    """Retorna um usuario especifico filtrando pelo username"""
+    user = db.users.get(username)
+
+    if user:
+        return f"""
+            <h1>{user['name']}</h1>
+            <img src="{user['image']}"/><br/>
+            telefone: {user['tel']} <br/>
+            <a href="/">Voltar</a>
+        """
+    else:
+        return abort(404, "user not found")
+
+
+app.run(use_reloader = True)
+
+                # exemplos de rotas
+
+#from flask import Flask, jsonify, render_template
+
+# app = Flask(__name__, template_folder="./static")
+#
+# @app.route('/')
+# def root():
+#     return f'oi'
 
 # @app.route('/')
 # def root():
@@ -26,5 +60,4 @@ def root():
 #     }
 #     return jsonify(r)
 
-
-app.run()
+#app.run()
