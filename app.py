@@ -34,6 +34,21 @@ def profile(username):
 
 app.add_url_rule('/user/<username>/', view_func=profile, endpoint='user')
 
+@app.route('/user/<username>/<int:quote_id>/')
+def quote(username,quote_id):
+    #user = db.users.get(username)  // precisa de retornar um dicionario vazio se nao encontrar nada. Para nao tentar usar
+    #o metodo get em um None (em caso do usuario nao ser econtrado na linha 42)
+    user = db.users.get(username, {})
+    quote = user.get("quotes",{}).get(quote_id)
+    if user and quote:
+        return f"""
+                   <h1>{user['name']}</h1>
+                   <img src="{user['image']}"/><br/>
+                    <p><q>{quote}</q></p> 
+                   <a href="/">Voltar</a>
+               """
+    else:
+        return abort(404, "user or quote not found")
 
 
 app.run(use_reloader = True)
