@@ -1,4 +1,4 @@
-from flask import Flask, abort, url_for
+from flask import Flask, abort, url_for, jsonify, current_app
 import db
 from converters import RegexConverter, ListConverter
 
@@ -20,8 +20,22 @@ def root():
             #que estão mapeados na url, e na definição da função.
         )
     html.append('</ul>')
-    return '\n'.join(html)
+    return '\n'.join(html), 201, {'x-hello':'World'}
 
+@app.route('/xml')
+def xml():
+    return "<user name = 'Bruno' />", {'Content-type':'application/xml'}
+
+@app.route('/json')
+def json():
+    return jsonify(users=[{'name':'bruno'},{'name':'pedro'}])
+
+@app.route('/cookie')
+def cookie():
+    response = current_app.make_response("hello current app.make response!")
+    response.set_cookie('nome',value='Bruno')
+    response.set_cookie('framework', value='flask')
+    return response
 
 @app.route('/user2/<list:usernames>/', endpoint='user2')
 def profile2(usernames):
