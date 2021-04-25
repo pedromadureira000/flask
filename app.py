@@ -58,7 +58,7 @@ def profile(username):
 
 app.add_url_rule('/user/<username>/', view_func=profile, endpoint='user')
 
-@app.route('/user/<list:username>/<int:quote_id>/')
+@app.route('/user/<username>/<int:quote_id>/')
 def quote(username,quote_id):
     #user = db.users.get(username)  // precisa de retornar um dicionario vazio se nao encontrar nada. Para nao tentar usar
     #o metodo get em um None (em caso do usuario nao ser econtrado na linha 42)
@@ -88,4 +88,6 @@ def reg_b(name):
 
 app.run(use_reloader = True)
 #reloader faz com que mudanças no codigo reflitam na aplicação, sem ter q ficar reiniciando ela.
+
+
 
